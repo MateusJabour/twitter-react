@@ -5,6 +5,12 @@ export function serialize(object) {
     serialized.append(key , object[key]);
   });
 
-  console.log(serialized);
   return serialized;
+}
+
+
+export function requireAuth({ session }) {
+  if (!session.isAuthenticated) {
+    window.location.href = '/login';
+  }
 }

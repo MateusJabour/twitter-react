@@ -20,7 +20,7 @@ class TweetsApi {
     const request = new Request('http://localhost:3000/tweets', {
       method: 'POST',
       headers: this.requestHeaders();,
-      body: JSON.stringify({ text: text })
+      body: serialize({ text: text })
     });
 
     return fetch(request).then(response => {

@@ -4,5 +4,8 @@ import users from '../data/users';
 export default {
   tweets,
   users,
-  session: !!sessionStorage.jwt
+  session: {
+    isAuthenticated: !!sessionStorage.jwt,
+    errorMessage: null
+  }
 };

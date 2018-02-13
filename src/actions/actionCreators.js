@@ -1,11 +1,20 @@
-export function loginSuccess() {
-  return {type: "LOG_IN_SUCCESS"};
+export function loginSuccess(authToken) {
+  return {
+    type: "LOGIN_SUCCESS",
+    authToken
+  };
 }
 
-export function logInUser(credentials) {
+export function loginFailed(message) {
   return {
-    type: "LOG_IN_USER",
-    credentials
+    type: "LOGIN_FAILED",
+    message
+  };
+}
+
+export function logoutUser(credentials) {
+  return {
+    type: "LOGOUT_USER"
   };
 }
 

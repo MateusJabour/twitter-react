@@ -1,20 +1,24 @@
-import sessionApi from '../api/session';
-import {browserHistory} from 'react-router';
-
 function session(state = [], action) {
   switch(action.type) {
-    case "LOG_IN_USER":
-      sessionApi.login(action.credentials).then(response => {
-        sessionStorage.setItem('jwt', response.auth_token);
-        browserHistory.push('/');
-        return !!sessionStorage.auth_token;
-      }).catch(error => {
-        throw(error);
+    case "LOGIN_SUCCESS":
+      sessionStorage.setItem('jwt', action.authToken);
+      return Object.assign({}, state, {
+        isAuthenticated: !!sessionStorage.jwt,
+        errorMessage: ''
+      });
+    case "LOGIN_FAILED":
+      return Object.assign({}, state, {
+        errorMessage: action.message
+      });
+    case "LOGOUT_USER":
+      sessionStorage.removeItem('jwt');
+      return Object.assign({}, state, {
+        isAuthenticated: !!sessionStorage.jwt,
+        errorMessage: ''
       });
     default:
       return state;
   }
-  return state;
 }
 
 export default session;

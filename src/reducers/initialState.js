@@ -1,9 +1,6 @@
-import tweets from '../data/tweets';
-import users from '../data/users';
-
 export default {
-  tweets,
-  users,
+  tweets: [],
+  users: [],
   session: {
     isAuthenticated: !!sessionStorage.jwt,
     errorMessage: null

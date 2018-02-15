@@ -1,12 +1,25 @@
 import { serialize } from '../helper';
 
-class TweetsApi {
+class UserApi {
   static requestHeaders() {
     return {'AUTHORIZATION': `Bearer ${sessionStorage.jwt}`}
   }
 
-  static getAllTweets() {
-    const request = new Request('http://localhost:3000/tweets', {
+  static signup(user) {
+    const request = new Request('http://localhost:3000/signup', {
+      method: 'POST',
+      body: serialize(user)
+    });
+
+    return fetch(request).then(response =>
+      response.json().then(json => ({ json, response }))
+    ).catch(error => {
+      return error;
+    });
+  }
+
+  static getUsers() {
+    const request = new Request('http://localhost:3000/users', {
       method: 'GET',
       headers: this.requestHeaders()
     });
@@ -17,20 +30,6 @@ class TweetsApi {
       return error;
     });
   }
-
-  static createTweet(text) {
-    const request = new Request('http://localhost:3000/tweets', {
-      method: 'POST',
-      headers: this.requestHeaders(),
-      body: serialize({ text })
-    });
-
-    return fetch(request).then(response =>
-      response.json().then(json => ({ json, response }))
-    ).catch(error => {
-      return error;
-    });
-  }
 }
 
-export default TweetsApi;
+export default UserApi;

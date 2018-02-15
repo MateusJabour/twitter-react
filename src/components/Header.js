@@ -18,7 +18,6 @@ class Header extends React.Component {
           <img src="" alt=""/>
         </div>
         <button onClick={() => this.props.logoutUser()}>Logout</button>
-        <button>Tweet</button>
       </div>
     );
   }

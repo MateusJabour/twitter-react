@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import sessionApi from '../api/session';
 
@@ -9,21 +10,23 @@ class Login extends React.Component {
     this.login = this.login.bind(this);
   }
 
+  componentWillMount () {
+    console.log(this.props.session);
+    if (this.props.session.isAuthenticated) {
+      window.location.href = "/";
+    }
+  }
+
   login(e) {
     e.preventDefault();
 
-    const credentials = {
-      email: this.refs.email.value,
-      password: this.refs.password.value
-    };
+    const credentials = {};
 
-    sessionApi.login(credentials).then(({ json, response }) => {
-      if (response.ok) {
-        this.props.loginSuccess(json.auth_token);
-      } else {
-        this.props.loginFailed(json.message);
-      }
-    });
+    Object.keys(this.refs).map((key, index) =>
+       credentials[key] = this.refs[key].value
+    );
+
+    this.props.loginUser(credentials);
   }
 
   render() {
@@ -37,6 +40,7 @@ class Login extends React.Component {
           <input type="submit"/>
         </form>
         <h1>{this.props.session.errorMessage}</h1>
+        <Link to="/signup">Sign up now</Link>
       </div>
     );
   }

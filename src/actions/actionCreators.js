@@ -2,6 +2,8 @@ import TweetsApi from '../api/tweets';
 import SessionApi from '../api/session';
 import UserApi from '../api/user';
 
+import { parseJwt } from '../helpers';
+
 function loginSuccess(authToken) {
   return {
     type: "LOGIN_SUCCESS",
@@ -39,7 +41,7 @@ export function signupUser(user) {
   return function(dispatch) {
     return UserApi.signup(user).then(({ json, response}) => {
       if (response.ok) {
-        dispatch(signupSuccess(json.auth_token))
+        dispatch(signupSuccess(json.auth_token, json.user))
       } else {
         dispatch(signupFailed(json.message))
       }
@@ -47,10 +49,11 @@ export function signupUser(user) {
   }
 }
 
-function signupSuccess(authToken) {
+function signupSuccess(authToken, user) {
   return {
     type: 'SIGNUP_SUCCESS',
-    authToken
+    authToken,
+    user
   }
 }
 
@@ -96,4 +99,19 @@ function receiveUsers(users) {
     type: "RECEIVE_USERS",
     users
   };
+}
+
+function receiveCurrentUser(user) {
+  return {
+    type: "RECEIVE_CURRENT_USER",
+    user
+  }
+}
+
+export function fetchCurrentUser() {
+  return function(dispatch) {
+    return UserApi.getUser(parseJwt(sessionStorage.getItem('jwt')).user_id)
+      .then(({json, response}) => dispatch(receiveCurrentUser(json)))
+      .catch((error) => error);
+  }
 }

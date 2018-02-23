@@ -9,6 +9,7 @@ function mapStateToProps(state) {
     tweets: state.tweets,
     users: state.users,
     session: state.session,
+    currentUser: state.currentUser,
   };
 }
 

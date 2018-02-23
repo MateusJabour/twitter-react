@@ -1,16 +1,11 @@
-import { serialize } from '../helper';
+import API from './api';
 
-class SessionApi {
+class SessionApi extends API {
   static login(credentials) {
-    const request = new Request('http://localhost:3000/auth/login', {
+    return this.makeRequest('http://localhost:3000/auth/login', {
       method: 'POST',
-      body: serialize(credentials)
-    });
-
-    return fetch(request).then(response =>
-      response.json().then(json => ({ json, response }))
-    ).catch(error => {
-      return error;
+      body: JSON.stringify(credentials),
+      headers: this.requestHeaders(false)
     });
   }
 }

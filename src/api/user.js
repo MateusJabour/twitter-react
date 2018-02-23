@@ -1,33 +1,25 @@
-import { serialize } from '../helper';
+import API from './api';
 
-class UserApi {
-  static requestHeaders() {
-    return {'AUTHORIZATION': `Bearer ${sessionStorage.jwt}`}
-  }
-
+class UserApi extends API {
   static signup(user) {
-    const request = new Request('http://localhost:3000/signup', {
+    return this.makeRequest('http://localhost:3000/signup', {
       method: 'POST',
-      body: serialize(user)
-    });
-
-    return fetch(request).then(response =>
-      response.json().then(json => ({ json, response }))
-    ).catch(error => {
-      return error;
+      body: JSON.stringify(user),
+      headers: this.requestHeaders(false)
     });
   }
 
   static getUsers() {
-    const request = new Request('http://localhost:3000/users', {
+    return this.makeRequest('http://localhost:3000/users', {
       method: 'GET',
       headers: this.requestHeaders()
     });
+  }
 
-    return fetch(request).then(response =>
-      response.json().then(json => ({ json, response }))
-    ).catch(error => {
-      return error;
+  static getUser(id) {
+    return this.makeRequest(`http://localhost:3000/user/${id}`, {
+      method: 'GET',
+      headers: this.requestHeaders()
     });
   }
 }

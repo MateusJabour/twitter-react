@@ -10,8 +10,8 @@ class API {
     return request;
   }
 
-  static makeRequest(url, options) {
-    const request = new Request(url, options);
+  static makeRequest(route, options) {
+    const request = new Request(`http://localhost:3000/${route}`, options);
 
     return fetch(request).then(response =>
       response.json().then(json => ({ json, response }))

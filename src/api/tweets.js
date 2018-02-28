@@ -2,17 +2,24 @@ import API from './api';
 
 class TweetsApi extends API {
   static getAllTweets() {
-    return this.makeRequest('http://localhost:3000/tweets', {
+    return this.makeRequest('tweets', {
       method: 'GET',
       headers: this.requestHeaders()
     });
   }
 
   static createTweet(text) {
-    return this.makeRequest('http://localhost:3000/tweets', {
+    return this.makeRequest('tweets', {
       method: 'POST',
       headers: this.requestHeaders(),
       body: JSON.stringify({ text })
+    });
+  }
+
+  static deleteTweet(id) {
+    return this.makeRequest(`tweet/${id}/delete`, {
+      method: 'POST',
+      headers: this.requestHeaders()
     });
   }
 }

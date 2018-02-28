@@ -1,6 +1,7 @@
 import TweetsApi from '../api/tweets';
 import SessionApi from '../api/session';
 import UserApi from '../api/user';
+import RelationshipsApi from '../api/relationships';
 
 import { parseJwt } from '../helpers';
 
@@ -64,25 +65,48 @@ function signupFailed(message) {
   }
 }
 
-export function createTweet(tweet) {
-  return {
-    type: 'CREATE_TWEET',
-    tweet
+export function fetchTweets() {
+  return function (dispatch) {
+    return TweetsApi.getAllTweets()
+      .then(({json, response}) => dispatch(receiveTweets(json)))
+      .catch((error) => error);
   }
 }
 
-export function receiveTweets(tweets) {
+function receiveTweets(tweets) {
   return {
     type: 'RECEIVE_TWEETS',
     tweets
   }
 }
 
-export function fetchTweets() {
-  return function(dispatch) {
-    return TweetsApi.getAllTweets()
-      .then(({json, response}) => dispatch(receiveTweets(json)))
+export function createTweet(text) {
+  return function (dispatch) {
+    return TweetsApi.createTweet(text)
+      .then(({json, response}) => dispatch(tweetCreationSuccess(json)))
       .catch((error) => error);
+  }
+}
+
+function tweetCreationSuccess(tweet) {
+  return {
+    type: 'TWEET_CREATION_SUCCESS',
+    tweet
+  }
+}
+
+export function deleteTweet(id) {
+  return function (dispatch) {
+    return TweetsApi.deleteTweet(id)
+      .then(({json, response}) => dispatch(tweetDeletionSuccess(json.id)))
+      .catch((error) => error);
+  }
+}
+
+function tweetDeletionSuccess(id) {
+  return {
+    type: 'TWEET_DELETION_SUCCESS',
+    id
   }
 }
 
@@ -113,5 +137,51 @@ export function fetchCurrentUser() {
     return UserApi.getUser(parseJwt(sessionStorage.getItem('jwt')).user_id)
       .then(({json, response}) => dispatch(receiveCurrentUser(json)))
       .catch((error) => error);
+  }
+}
+
+
+export function fetchRelationships() {
+  return function(dispatch) {
+    return RelationshipsApi.getAllRelationships()
+      .then(({json, response}) => dispatch(receiveRelationships(json)))
+      .catch((error) => error);
+  }
+}
+
+function receiveRelationships(relationships) {
+  return {
+    type: 'RECEIVE_RELATIONSHIPS',
+    relationships
+  }
+}
+
+export function followUser(followedId) {
+  return function(dispatch) {
+    return RelationshipsApi.followUser(followedId)
+      .then(({json, response}) => dispatch(followUserSuccess(json)))
+      .catch((error) => error);
+  }
+}
+
+function followUserSuccess(relationship) {
+  return {
+    type: "FOLLOW_USER_SUCCESS",
+    relationship
+  }
+}
+
+export function unfollowUser(unfollowedId) {
+  return function(dispatch) {
+    return RelationshipsApi.unfollowUser(unfollowedId)
+      .then(({json, response}) => dispatch(unfollowUserSuccess(json.id)))
+      .catch((error) => error);
+  }
+}
+
+function unfollowUserSuccess(id) {
+  return {
+    type: "UNFOLLOW_USER_SUCCESS",
+    id
   }
 }

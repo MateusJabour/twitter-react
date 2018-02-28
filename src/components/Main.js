@@ -10,6 +10,15 @@ class Main extends React.Component {
     this.renderHeader = this.renderHeader.bind(this);
   }
 
+  componentWillMount() {
+    if (this.props.session.isAuthenticated) {
+      this.props.fetchCurrentUser();
+      this.props.fetchTweets();
+      this.props.fetchUsers();
+      this.props.fetchRelationships();
+    }
+  }
+
   renderHeader() {
     return this.props.session.isAuthenticated ? <Header {...this.props} /> : null;
   }

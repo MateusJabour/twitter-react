@@ -3,7 +3,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import thunk from 'redux-thunk';
 
-import { fetchTweets, fetchUsers, fetchCurrentUser } from './actions/actionCreators'
+import { fetchTweets, fetchUsers, fetchCurrentUser, fetchRelationships } from './actions/actionCreators'
 
 import rootReducer from './reducers/index';
 import initialState from './reducers/initialState';
@@ -21,12 +21,6 @@ if(module.hot) {
     const nextRootReducer = require('./reducers/index').default;
     store.replaceReducer(nextRootReducer);
   });
-}
-
-if (store.getState().session.isAuthenticated) {
-  store.dispatch(fetchTweets());
-  store.dispatch(fetchUsers());
-  store.dispatch(fetchCurrentUser());
 }
 
 export default store;

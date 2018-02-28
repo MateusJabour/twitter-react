@@ -1,6 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router';
+
+import { redirectAuth } from '../helpers';
 
 class Signup extends React.Component {
   constructor() {
@@ -9,45 +10,52 @@ class Signup extends React.Component {
     this.signup = this.signup.bind(this);
   }
 
-  componentWillMount () {
-    console.log(this.props.session);
-    if (this.props.session.isAuthenticated) {
-      window.location.href = "/";
-    }
+  componentWillReceiveProps(nextProps) {
+    redirectAuth(nextProps);
+  }
+
+  componentWillUpdate() {
+    redirectAuth(this.props);
+  }
+
+  componentWillMount() {
+    redirectAuth(this.props);
   }
 
   signup(e) {
     e.preventDefault();
     const userInfo = {};
 
-    Object.keys(this.refs).map((key, index) =>
-       userInfo[key] = this.refs[key].value
-    );
+    Object.keys(this.refs).map((key, index) => {
+      userInfo[key] = this.refs[key].value;
+    });
 
     this.props.signupUser(userInfo);
   }
 
   render () {
     return (
-      <div>
-        <form onSubmit={this.signup}>
-          <label htmlFor="">First Name</label>
-          <input type="text" ref="first_name"/>
-          <label htmlFor="">Last Name</label>
-          <input type="text" ref="last_name"/>
-          <label htmlFor="">Username</label>
-          <input type="text" ref="username"/>
-          <label htmlFor="">Email</label>
-          <input type="email" ref="email"/>
-          <label htmlFor="">Password</label>
-          <input type="password" ref="password"/>
-          <label htmlFor="">Confirm Password</label>
-          <input type="password" ref="confirm_password"/>
-          <input type="submit" value="Signup"/>
-        </form>
-        <Link to="/login">Login now</Link>
+      <div className="signup">
+        <div className="form__container">
+          <form onSubmit={this.signup} className="form">
+            <label htmlFor="" className="form__label">First Name</label>
+            <input type="text" ref="first_name" className="form__field"/>
+            <label htmlFor="" className="form__label">Last Name</label>
+            <input type="text" ref="last_name" className="form__field"/>
+            <label htmlFor="" className="form__label">Username</label>
+            <input type="text" ref="username" className="form__field"/>
+            <label htmlFor="" className="form__label">Email</label>
+            <input type="email" ref="email" className="form__field"/>
+            <label htmlFor="" className="form__label">Password</label>
+            <input type="password" ref="password" className="form__field"/>
+            <label htmlFor="" className="form__label">Confirm Password</label>
+            <input type="password" ref="confirm_password" className="form__field"/>
+            <button type="submit" className="form__submit-button">Submit</button>
+          </form>
+          <Link to="/login">Login now</Link>
+        </div>
       </div>
-  )
+    )
   }
 }
 

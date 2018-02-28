@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import sessionApi from '../api/session';
+import { redirectAuth } from '../helpers';
 
 class Login extends React.Component {
   constructor() {
@@ -10,11 +11,16 @@ class Login extends React.Component {
     this.login = this.login.bind(this);
   }
 
-  componentWillMount () {
-    console.log(this.props.session);
-    if (this.props.session.isAuthenticated) {
-      window.location.href = "/";
-    }
+  componentWillReceiveProps(nextProps) {
+    redirectAuth(nextProps);
+  }
+
+  componentWillUpdate() {
+    redirectAuth(this.props);
+  }
+
+  componentWillMount() {
+    redirectAuth(this.props);
   }
 
   login(e) {
@@ -31,16 +37,18 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.login}>
-          <label htmlFor="">Email</label>
-          <input ref="email" type="text"/>
-          <label htmlFor="">Password</label>
-          <input ref="password" type="password"/>
-          <input type="submit"/>
-        </form>
-        <h1>{this.props.session.errorMessage}</h1>
-        <Link to="/signup">Sign up now</Link>
+      <div className="login">
+        <div className="form__container">
+          <form onSubmit={this.login} className="form">
+            <label htmlFor="email" className="form__label">Email</label>
+            <input ref="email" type="text" className="form__field" id="email"/>
+            <label htmlFor="password" className="form__label">Password</label>
+            <input ref="password" type="password" className="form__field" id="password"/>
+            <button type="submit" className="form__submit-button">Submit</button>
+            <small>{this.props.session.errorMessage}</small>
+          </form>
+          <Link to="/signup">Sign up now</Link>
+        </div>
       </div>
     );
   }

@@ -1,25 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router';
-
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { signupUser } from '../actions/actionCreators';
 import { redirectAuth } from '../helpers';
 
-class Signup extends React.Component {
+class SignupComponent extends React.Component {
   constructor() {
     super();
 
     this.signup = this.signup.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    redirectAuth(nextProps);
-  }
-
-  componentWillUpdate() {
-    redirectAuth(this.props);
-  }
-
   componentWillMount() {
     redirectAuth(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    redirectAuth(nextProps);
   }
 
   signup(e) {
@@ -58,5 +56,17 @@ class Signup extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    session: state.session
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ signupUser }, dispatch);
+}
+
+const Signup = connect(mapStateToProps, mapDispatchToProps)(SignupComponent);
 
 export default Signup;

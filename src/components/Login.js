@@ -1,26 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { loginUser } from '../actions/actionCreators';
 
 import sessionApi from '../api/session';
 import { redirectAuth } from '../helpers';
 
-class Login extends React.Component {
+class LoginComponent extends React.Component {
   constructor() {
     super();
 
     this.login = this.login.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    redirectAuth(nextProps);
-  }
-
-  componentWillUpdate() {
-    redirectAuth(this.props);
-  }
-
   componentWillMount() {
     redirectAuth(this.props);
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    redirectAuth(nextProps);
   }
 
   login(e) {
@@ -53,5 +52,17 @@ class Login extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    session: state.session
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ loginUser }, dispatch);
+}
+
+const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
 
 export default Login;

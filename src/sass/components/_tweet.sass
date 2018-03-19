@@ -1,12 +1,55 @@
-.tweet
+.tweet__container
   display: flex
-  justify-content: space-between
+  flex-direction: column
   padding: 1rem 0.5rem
   border-bottom: 1px solid $blue1
 
+.tweet
+  display: flex
+  justify-content: space-between
+
 .tweet__main
   display: flex
-  
+
 .tweet__profile-picture
-  width: 100px
+  width: 5rem
+  margin: 0 1rem 0 0
+
+.tweet__side-info
+  display: flex
+  flex-direction: column
+
+.tweet__retweet-message
+  margin: 0 0 1rem 5rem
+
+.tweet__delete-button
+  width: 1rem
+  cursor: pointer
+
+.tweet__middle
+  display: flex
+  flex-direction: column
+
+.tweet__time
+  &:before
+    content: "\00b7"
+    margin-right: 5px
+
+.tweet__user-fullname
+  text-decoration: none
+  color: inherit
+
+.tweet__user-username
+  text-decoration: none
+  color: inherit
+  margin-right: 5px
+
+.tweet__actions
+  display: flex
+
+.tweet__action
   margin-right: 1rem
+  
+  img
+    width: 1.5rem
+    cursor: pointer

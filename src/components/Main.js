@@ -2,34 +2,36 @@ import React from 'react';
 import Header from './Header';
 import Login from './Login';
 import Timeline from './Timeline';
+import { requireAuth } from '../helpers';
 
 class Main extends React.Component {
-  constructor() {
-    super();
+  shouldComponentUpdate(nextProps) {
+    return nextProps.isLoaded;
+  }
 
-    this.renderHeader = this.renderHeader.bind(this);
+  componentWillReceiveProps(nextProps) {
+    requireAuth(nextProps);
   }
 
   componentWillMount() {
-    if (this.props.session.isAuthenticated) {
-      this.props.fetchCurrentUser();
-      this.props.fetchTweets();
-      this.props.fetchUsers();
-      this.props.fetchRelationships();
-    }
+    requireAuth(this.props);
   }
 
-  renderHeader() {
-    return this.props.session.isAuthenticated ? <Header {...this.props} /> : null;
+  componentDidMount() {
+    this.props.fetchCurrentUser()
+    .then(() => this.props.fetchUsers())
+    .then(() => this.props.fetchRelationships())
+    .then(() => this.props.fetchTimelineTweets())
+    .then(() => this.props.fetchTimelineRetweets());
   }
 
   render () {
-    return (
-        <div>
-          {this.renderHeader()}
-          {React.cloneElement(this.props.children, this.props)}
-        </div>
-      )
+    return this.props.isLoaded ? (
+      <div>
+        <Header {...this.props} />
+        {React.cloneElement(this.props.children, this.props)}
+      </div>
+    ) : <div>Loading</div>;
   }
 }
 

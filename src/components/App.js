@@ -11,6 +11,15 @@ function mapStateToProps(state) {
     session: state.session,
     relationships: state.relationships,
     currentUser: state.currentUser,
+    retweets: state.retweets,
+    retweetTweets: state.retweetTweets,
+    isLoaded:
+      state.usersIsLoaded &&
+      state.tweetsIsLoaded &&
+      state.retweetsIsLoaded &&
+      state.relationshipsIsLoaded &&
+      state.retweetTweetsIsLoaded &&
+      state.currentUserIsLoaded
   };
 }
 

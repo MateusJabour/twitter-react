@@ -1,4 +1,4 @@
-function relationships(state = [], action) {
+export function relationships(state = [], action) {
   switch (action.type) {
     case "RECEIVE_RELATIONSHIPS":
       return action.relationships;
@@ -19,4 +19,11 @@ function relationships(state = [], action) {
   }
 }
 
-export default relationships;
+export function relationshipsIsLoaded(state = false, action) {
+  switch (action.type) {
+    case "RECEIVE_RELATIONSHIPS":
+      return true;
+    default:
+      return state
+  }
+}

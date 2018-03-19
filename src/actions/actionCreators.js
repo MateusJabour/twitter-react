@@ -29,7 +29,6 @@ export function loginUser(credentials) {
   return function(dispatch) {
     return SessionApi.login(credentials).then(({ json, response }) => {
       if (response.ok) {
-        dispatch(fetchTweets());
         dispatch(loginSuccess(json.auth_token));
       } else {
         dispatch(loginFailed(json.message));
@@ -65,9 +64,17 @@ function signupFailed(message) {
   }
 }
 
-export function fetchTweets() {
+export function fetchTimelineTweets() {
   return function (dispatch) {
     return TweetsApi.getAllTweets()
+      .then(({json, response}) => dispatch(receiveTweets(json)))
+      .catch((error) => error);
+  }
+}
+
+export function fetchUserTweets(user_id) {
+  return function (dispatch) {
+    return TweetsApi.getUserTweets(user_id)
       .then(({json, response}) => dispatch(receiveTweets(json)))
       .catch((error) => error);
   }
@@ -107,6 +114,60 @@ function tweetDeletionSuccess(id) {
   return {
     type: 'TWEET_DELETION_SUCCESS',
     id
+  }
+}
+
+export function fetchTimelineRetweets() {
+  return function (dispatch) {
+    return TweetsApi.getAllRetweets()
+      .then(({json, response}) => dispatch(receiveRetweets(json.retweets, json.retweet_tweets)))
+      .catch((error) => error);
+  }
+}
+
+export function fetchUserRetweets(user_id) {
+  return function (dispatch) {
+    return TweetsApi.getUserRetweets(user_id)
+      .then(({json, response}) => dispatch(receiveRetweets(json.retweets, json.retweet_tweets)))
+      .catch((error) => error);
+  }
+}
+
+function receiveRetweets(retweets, retweetTweets) {
+  return {
+    type: 'RECEIVE_RETWEETS',
+    retweets,
+    retweetTweets
+  }
+}
+
+export function retweet(tweetId) {
+  return function (dispatch) {
+    return TweetsApi.retweet(tweetId)
+      .then(({json, response}) => {
+        if (json.action === 'create') {
+          dispatch(retweetSuccess(json.retweet, json.retweet_tweet))
+        } else if (json.action === 'delete') {
+          dispatch(retweetDeletion(json.id, json.tweet_id))
+        }
+      })
+      .catch((error) => error);
+  }
+}
+
+function retweetSuccess(retweet, retweetTweet) {
+  return {
+    type: 'RETWEET_SUCCESS',
+    retweet,
+    retweetTweet
+  }
+}
+
+function retweetDeletion(id, tweetId) {
+  return {
+    type: 'RETWEET_DELETION',
+    id,
+    tweetId
   }
 }
 

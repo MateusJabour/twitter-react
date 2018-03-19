@@ -1,4 +1,4 @@
-function users(state = [], action) {
+export function users(state = [], action) {
   switch (action.type) {
     case "SIGNUP_SUCCESS":
       return state;
@@ -9,4 +9,11 @@ function users(state = [], action) {
   }
 }
 
-export default users;
+export function usersIsLoaded(state = false, action) {
+  switch (action.type) {
+    case "RECEIVE_USERS":
+      return true;
+    default:
+      return state
+  }
+}

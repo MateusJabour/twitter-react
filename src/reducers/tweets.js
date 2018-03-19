@@ -1,4 +1,4 @@
-function tweets(state = [], action) {
+export function tweets(state = [], action) {
   switch (action.type) {
     case "TWEET_CREATION_SUCCESS":
       return [ action.tweet, ...state];
@@ -19,4 +19,11 @@ function tweets(state = [], action) {
   }
 }
 
-export default tweets;
+export function tweetsIsLoaded(state = false, action) {
+  switch (action.type) {
+    case "RECEIVE_TWEETS":
+      return true;
+    default:
+      return state
+  }
+}

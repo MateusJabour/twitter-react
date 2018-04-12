@@ -1,10 +1,12 @@
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import * as actionCreators from '../actions/actionCreators';
+import { actions } from '../actions/index';
 
 import Main from './Main';
+import { All } from '../reducers';
+import { ConnectedDispatch, ConnectedState } from '../types';
 
-function mapStateToProps(state) {
+function mapStateToProps(state : All) {
   return {
     tweets: state.tweets,
     users: state.users,
@@ -23,8 +25,8 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
+function mapDispatchToProps(dispatch : Dispatch<All>) : ConnectedDispatch {
+  return bindActionCreators(actions, dispatch);
 }
 
 const App = connect(mapStateToProps, mapDispatchToProps)(Main);

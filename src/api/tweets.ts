@@ -8,14 +8,14 @@ class TweetsApi extends API {
     });
   }
 
-  static getUserTweets(user_id) {
+  static getUserTweets(user_id : string) {
     return this.makeRequest(`tweets/${user_id}`, {
       method: 'GET',
       headers: this.requestHeaders()
     });
   }
 
-  static createTweet(text) {
+  static createTweet(text : string) {
     return this.makeRequest('tweets', {
       method: 'POST',
       headers: this.requestHeaders(),
@@ -23,7 +23,7 @@ class TweetsApi extends API {
     });
   }
 
-  static deleteTweet(id) {
+  static deleteTweet(id : string) {
     return this.makeRequest(`tweet/${id}/delete`, {
       method: 'POST',
       headers: this.requestHeaders()
@@ -37,14 +37,14 @@ class TweetsApi extends API {
     });
   }
 
-  static getUserRetweets(user_id) {
+  static getUserRetweets(user_id : string) {
     return this.makeRequest(`retweet/${user_id}`, {
       method: 'GET',
       headers: this.requestHeaders()
     });
   }
 
-  static retweet(tweetId) {
+  static retweet(tweetId : string) {
     return this.makeRequest(`retweet/${tweetId}`, {
       method: 'POST',
       headers: this.requestHeaders()

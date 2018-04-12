@@ -1,22 +1,24 @@
-export function requireAuth({ session, history }) {
+import { Session } from "./reducers/session";
+
+export function requireAuth({ session, history } : { session: Session, history: any }) {
   if (!session.isAuthenticated) {
     history.push('/login');
   }
 }
 
-export function redirectAuth({ session, history }) {
+export function redirectAuth({ session, history } : { session: Session, history: any }) {
   if (session.isAuthenticated) {
     history.push('/');
   }
 }
 
-export function parseJwt (token) {
+export function parseJwt (token : string) {
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace('-', '+').replace('_', '/');
   return JSON.parse(window.atob(base64));
 };
 
-export function difFromCreationDate(date) {
+export function difFromCreationDate(date : string) {
   const today = Date.now() / 1000;
   const photoDate = new Date(date).getTime() / 1000;
 
@@ -37,4 +39,12 @@ export function difFromCreationDate(date) {
   } else {
     return Math.floor(difInSec) + 's';
   }
+}
+
+export function sortByDate(array : Array<any>) {
+  return array.sort(function(a, b) {
+    const aDate = new Date(a.createdAt);
+    const bDate = new Date(b.createdAt);
+    return aDate > bDate ? -1 : aDate < bDate ? 1 : 0;
+  });
 }

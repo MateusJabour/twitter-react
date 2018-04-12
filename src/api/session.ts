@@ -1,7 +1,7 @@
 import API from './api';
 
 class SessionApi extends API {
-  static login(credentials) {
+  static login(credentials : { email: string, password: string }) {
     return this.makeRequest('auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),

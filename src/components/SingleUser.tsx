@@ -1,23 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import StatsBar from './StatsBar';
 import Tweet from './Tweet';
+import { ConnectedState, ConnectedDispatch } from '../types';
+import { User } from '../reducers/users';
+import { Tweet as TweetType } from '../reducers/tweets';
+import { Retweet } from '../reducers/retweets';
+import { sortByDate } from '../helpers';
 
-class SingleUser extends React.Component {
-  constructor() {
-    super();
+class SingleUser extends React.Component<ConnectedState & ConnectedDispatch, {}> {
+  constructor(props: ConnectedState & ConnectedDispatch) {
+    super(props);
 
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.renderUserTweets = this.renderUserTweets.bind(this);
   }
 
-  componentWillMount() {
-    this.props.fetchUserTweets(this.props.users[this.props.params.id].id)
-      .then(() => this.props.fetchUserRetweets(this.props.users[this.props.params.id].id));
+  async componentWillMount() {
+    console.log(this.props);
+    await this.props.fetchUserTweets(this.props.users[this.props.match.params.id].id);
+    await this.props.fetchUserRetweets(this.props.users[this.props.match.params.id].id);
   }
 
-  renderFollowButton(user) {
+  renderFollowButton(user : User) {
     if (!(this.props.currentUser.id === user.id)) {
       const relationship = this.props.relationships.find((relationship) => {
         return relationship.follower_id == this.props.currentUser.id && relationship.followed_id == user.id
@@ -33,31 +39,33 @@ class SingleUser extends React.Component {
   }
 
   renderUserTweets() {
-    const tweetsAndRetweets = this.props.tweets
-      .concat(this.props.retweets)
-      .filter((tweet) => tweet.user_id === this.props.users[this.props.params.id].id)
-      .sort(function(a, b) {
-        a = new Date(a.created_at);
-        b = new Date(b.created_at);
-        return a > b ? -1 : a < b ? 1 : 0;
+    const retweetsEl : {tweet: JSX.Element, createdAt: string}[] =
+      this.props.retweets.map((retweet) => {
+        const tweet = this.props.retweetTweets.find(tweet => tweet.id === retweet.tweet_id);
+        return { tweet: <Tweet
+          {...this.props}
+          key={retweet.id}
+          tweet={tweet}
+          isRetweet={true}
+          retweetUser={this.props.users[retweet.user_id]}
+        />, createdAt: retweet.created_at};
     });
 
-    return tweetsAndRetweets.map((object) => {
-      const [tweet, retweetUser] = !!object.text ?
-        [object, undefined] :
-        [this.props.retweetTweets.find(tweet => object.tweet_id === tweet.id), this.props.users[object.user_id]];
-      return <Tweet
-        {...this.props}
-        tweet={tweet}
-        key={object.id}
-        isRetweet={!object.text}
-        retweetUser={retweetUser}
-      />
+    const tweetsEl : {tweet: JSX.Element, createdAt: string}[] =
+      this.props.tweets.map((tweet) => {
+        return { tweet: <Tweet
+          {...this.props}
+          key={tweet.id}
+          tweet={tweet}
+          isRetweet={false}
+        />, createdAt: tweet.created_at};
     });
+
+    return sortByDate([...retweetsEl, ...tweetsEl]);
   }
 
   render () {
-    const user = this.props.users[this.props.params.id];
+    const user = this.props.users[this.props.match.params.id];
 
     return (
       <div className="single-user__container container">
@@ -73,9 +81,6 @@ class SingleUser extends React.Component {
             <h1>@{user.username}</h1>
             <h2>{user.first_name} {user.last_name}</h2>
             <StatsBar {...this.props} user={user}/>
-          </div>
-          <div className="single-user__tweets">
-            {this.renderUserTweets()}
           </div>
         </div>
       </div>

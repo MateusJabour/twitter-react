@@ -1,14 +1,14 @@
 import API from './api';
 
 class RelationshipsApi extends API {
-  static followUser(followedId) {
+  static followUser(followedId  : string) {
     return this.makeRequest(`follow/${followedId}`, {
       method: 'POST',
       headers: this.requestHeaders()
     });
   }
 
-  static unfollowUser(unfollowedId) {
+  static unfollowUser(unfollowedId : string) {
     return this.makeRequest(`unfollow/${unfollowedId}`, {
       method: 'POST',
       headers: this.requestHeaders()

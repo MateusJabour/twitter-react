@@ -1,4 +1,7 @@
-export function currentUser(state = [], action) {
+import { User } from './users';
+import { Action } from '../actions/index';
+
+export function currentUser(state : User | {} = {}, action : Action) : User | {} {
   switch (action.type) {
     case "SIGNUP_SUCCESS":
     case "RECEIVE_CURRENT_USER":
@@ -8,7 +11,7 @@ export function currentUser(state = [], action) {
   }
 }
 
-export function currentUserIsLoaded(state = false, action) {
+export function currentUserIsLoaded(state = false, action : Action) : boolean {
   switch (action.type) {
     case "SIGNUP_SUCCESS":
     case "RECEIVE_CURRENT_USER":

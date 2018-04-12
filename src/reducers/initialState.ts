@@ -1,18 +1,20 @@
-export default {
-  tweets: null,
-  users: null,
+import { All } from ".";
+
+export default <All>{
+  tweets: [],
+  users: {},
   usersIsLoaded: false,
   tweetsIsLoaded: false,
   currentUserIsLoaded: false,
   relationshipsIsLoaded: false,
   retweetsIsLoaded: false,
   retweetTweetsIsLoaded: false,
-  currentUser: null,
-  relationships: null,
-  retweets: null,
-  retweetTweets: null,
+  currentUser: {},
+  relationships: [],
+  retweets: [],
+  retweetTweets: [],
   session: {
     isAuthenticated: !!sessionStorage.jwt,
-    errorMessage: null
+    errorMessage: ''
   }
 };

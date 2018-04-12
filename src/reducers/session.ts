@@ -1,4 +1,14 @@
-function session(state = [], action) {
+import { Action } from '../actions/index';
+
+export type Session = {
+  isAuthenticated: boolean,
+  errorMessage: string
+}
+
+export function session(state : Session = {
+  isAuthenticated: !!sessionStorage.jwt,
+  errorMessage: ''
+}, action : Action) : Session {
   switch(action.type) {
     case "LOGIN_SUCCESS":
     case "SIGNUP_SUCCESS":
@@ -21,5 +31,3 @@ function session(state = [], action) {
       return state;
   }
 }
-
-export default session;

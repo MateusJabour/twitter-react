@@ -2,10 +2,11 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
+  mode: 'development',
   devtool: 'source-map',
   entry: [
     'webpack-hot-middleware/client',
-    './src/twitter'
+    './src/twitter.tsx'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -16,20 +17,29 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
+  resolve: {
+    // Add `.ts` and `.tsx` as a resolvable extension.
+    extensions: [".sass", ".ts", ".tsx", ".js"]
+  },
   module: {
-    loaders: [
-    // js
-    {
-      test: /\.js$/,
-      include: path.join(__dirname, 'src'),
-      loaders: ['babel-loader']
-    },
-    // CSS
-    {
-      test: /\.sass$/,
-      include: path.join(__dirname, 'src'),
-      loader: 'style-loader!css-loader!sass-loader'
-    }
+    rules: [
+      // js
+      {
+        test: /\.tsx?$/,
+        include: path.join(__dirname, 'src'),
+        exclude: /node_modules/,
+        use: 'ts-loader'
+      },
+      // CSS
+      {
+        test: /\.sass$/,
+        include: path.join(__dirname, 'src'),
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ]
+      }
     ]
   }
 };

@@ -1,13 +1,29 @@
-import React from 'react'
-import { Link } from 'react-router';
-import { bindActionCreators } from 'redux';
+import * as React from 'react'
+import { Link } from 'react-router-dom';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { signupUser } from '../actions/actionCreators';
-import { redirectAuth } from '../helpers';
 
-class SignupComponent extends React.Component {
-  constructor() {
-    super();
+import { actions } from '../actions/index';
+import { redirectAuth } from '../helpers';
+import { Session } from '../reducers/session';
+import { User } from '../reducers/users';
+import { All } from '../reducers';
+import { UserInformation } from '../types';
+import { ThunkAction } from 'redux-thunk';
+
+
+interface ConnectedDispatch {
+  signupUser: (user: UserInformation) => ThunkAction<void, All,  Promise<void>>;
+}
+
+interface ConnectedState {
+  session : Session;
+  history: any;
+}
+
+class SignupComponent extends React.Component<ConnectedState & ConnectedDispatch, {}> {
+  constructor(props : ConnectedState & ConnectedDispatch) {
+    super(props);
 
     this.signup = this.signup.bind(this);
   }
@@ -16,16 +32,24 @@ class SignupComponent extends React.Component {
     redirectAuth(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps : ConnectedState & ConnectedDispatch) {
     redirectAuth(nextProps);
   }
 
-  signup(e) {
+  signup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const userInfo = {};
+    const userInfo : UserInformation = {
+      first_name : '',
+      last_name : '',
+      username : '',
+      email : '',
+      password : '',
+      confirm_password : '',
+    };
 
     Object.keys(this.refs).map((key, index) => {
-      userInfo[key] = this.refs[key].value;
+      let input = this.refs[key] as HTMLInputElement;
+      userInfo[key] = input.value;
     });
 
     this.props.signupUser(userInfo);
@@ -57,14 +81,14 @@ class SignupComponent extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state : All) {
   return {
     session: state.session
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ signupUser }, dispatch);
+function mapDispatchToProps(dispatch : Dispatch<All>) : ConnectedDispatch {
+  return bindActionCreators({ signupUser: actions.signupUser }, dispatch);
 }
 
 const Signup = connect(mapStateToProps, mapDispatchToProps)(SignupComponent);

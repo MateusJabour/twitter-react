@@ -1,6 +1,6 @@
 class API {
   static requestHeaders(auth = true) {
-    const request = {};
+    const request : { [key: string] : string } = {};
 
     request["CONTENT-TYPE"] = "application/json";
     if (auth) {
@@ -10,7 +10,7 @@ class API {
     return request;
   }
 
-  static makeRequest(route, options) {
+  static makeRequest(route : string, options : object) {
     const request = new Request(`http://localhost:3000/${route}`, options);
 
     return fetch(request).then(response =>

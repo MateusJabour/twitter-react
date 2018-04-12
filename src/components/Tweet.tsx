@@ -1,16 +1,26 @@
-import React from 'react';
+import * as React from 'react';
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { difFromCreationDate } from '../helpers';
+import { ConnectedState, ConnectedDispatch } from '../types';
+import { Tweet } from '../reducers/tweets';
+import { User } from '../reducers/users';
+import { Retweet } from '../reducers/retweets';
 
-class Tweet extends React.Component {
-  render () {
-    const { tweet } = this.props;
-    const tweetUser = this.props.users[tweet.user_id];
+export interface TweetOwnProps {
+  isRetweet : boolean;
+  tweet ?: Tweet;
+  retweetUser ?: User;
+}
+
+const Tweet : React.SFC<ConnectedState & ConnectedDispatch & TweetOwnProps> = (props) => {
+  const { tweet } = props;
+  if (tweet) {
+    const tweetUser = props.users[tweet.user_id];
     return (
       <div className="tweet__container">
         <small className="tweet__retweet-message">
-          { this.props.isRetweet ? `${this.props.retweetUser.first_name} ${this.props.retweetUser.last_name} retweeted this`: ''}
+          { props.isRetweet && props.retweetUser ? `${props.retweetUser.first_name} ${props.retweetUser.last_name} retweeted this`: ''}
         </small>
         <div className="tweet">
           <div className="tweet__main">
@@ -39,10 +49,10 @@ class Tweet extends React.Component {
                   />
                 </div>
                 <div className="tweet__action">
-                  <span>{this.props.retweets.filter((retweet) => retweet.tweet_id === tweet.id).length}</span>
+                  <span>{props.retweets.filter((retweet) => retweet.tweet_id === tweet.id).length}</span>
                   <img
                     src="https://www.seoclerk.com/pics/want55519-1naJS01508179397.png"
-                    onClick={() => { this.props.retweet(tweet.id) }}
+                    onClick={() => { props.retweet(tweet.id) }}
                     alt=""
                   />
                 </div>
@@ -58,10 +68,10 @@ class Tweet extends React.Component {
             </div>
           </div>
           <div className="tweet__side-info">
-            {tweet.user_id === this.props.currentUser.id ?
+            {tweet.user_id === props.currentUser.id ?
               <img
                 src="https://cdn3.iconfinder.com/data/icons/in-and-around-the-house/43/trash_bin-512.png"
-                onClick={() => { this.props.deleteTweet(tweet.id) }}
+                onClick={() => { props.deleteTweet(tweet.id) }}
                 className="tweet__delete-button"
                 />
               : ''
@@ -69,8 +79,11 @@ class Tweet extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
+  } else {
+    return (<div>Hey</div>)
   }
+
 }
 
 export default Tweet;

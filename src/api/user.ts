@@ -1,7 +1,7 @@
 import API from './api';
 
 class UserApi extends API {
-  static signup(user) {
+  static signup(user : object) {
     return this.makeRequest('users', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -16,7 +16,7 @@ class UserApi extends API {
     });
   }
 
-  static getUser(id) {
+  static getUser(id : string) {
     return this.makeRequest(`user/${id}`, {
       method: 'GET',
       headers: this.requestHeaders()
